@@ -7,4 +7,4 @@ int main()
     initiate_board(board);
     print_board(board);
     return 0;
-}   
+}
