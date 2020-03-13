@@ -1,7 +1,7 @@
 all: bin/chess
 
 bin/chess: build/main.o build/board.o build/board_print_plain.o
-	gcc -Wall -Werror build/main.o build/board.o build/board_print_plain.o -o chess
+	gcc -Wall -Werror build/main.o build/board.o build/board_print_plain.o -o bin/chess
 
 build/main.o: src/main.c src/board_print_plain.h src/board.h
 	clang-format -i src/main.c

@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "board_print_plain.h"
+#include <stdio.h>
 
 void print_board(char board[][8])
 {
