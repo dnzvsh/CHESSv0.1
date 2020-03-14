@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "board.h"
 
 void initiate_board(char board[][8])
 {
@@ -22,25 +22,4 @@ void initiate_board(char board[][8])
     board[0][5] = 'B';
     board[0][6] = 'N';
     board[0][7] = 'R';
-}
-
-void print_board(char board[][8])
-{
-    printf("   A B C D E F G H\n   _______________\n");
-    for (int i = 0; i < 8; i++) {
-        printf("%d |", i + 1);
-        for (int j = 0; j < 8; j++) {
-            printf("%c ", board[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n   _______________\n   A B C D E F G H\n");
-}
-
-int main()
-{
-    char board[8][8] = {{' '}};
-    initiate_board(board);
-    print_board(board);
-    return 0;
 }
