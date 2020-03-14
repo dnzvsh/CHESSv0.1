@@ -96,6 +96,7 @@ void parsing_black(Parsing* turn, int* start, int len)
 
 void input_data(Parsing* turn)
 {
+    turn->round++;
     char i = getchar();
     int len = 1;
     turn->data[0] = i;

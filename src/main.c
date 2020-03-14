@@ -7,6 +7,7 @@ int main()
 {
     char board[8][8] = {{' '}};
     Parsing* turn = malloc(sizeof(Parsing));
+    turn->round = 0;
     initiate_board(board);
     print_board(board);
     input_data(turn);
