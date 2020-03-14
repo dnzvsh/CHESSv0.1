@@ -34,7 +34,7 @@ void print_board(char board[][8])
         }
         printf("\n");
     }
-    printf("   _______________\n   A B C D E F G H\n");
+    printf("\n   _______________\n   A B C D E F G H\n");
 }
 
 int main()
