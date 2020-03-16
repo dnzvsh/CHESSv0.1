@@ -25,5 +25,6 @@ int main()
     printf("Black_type = %c\nWhite type = %c\n",
            turn->type_turn_black,
            turn->type_turn_white);
+    check(turn);
     return 0;
 }

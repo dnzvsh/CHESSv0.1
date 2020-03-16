@@ -102,6 +102,21 @@ void swap(char* a, char* b)
     *b = tmp;
 }
 
+int check(Parsing* turn)
+{
+    for (int i = 0; i < 4; i++) {
+        if (turn->white_turn[i] > 8) {
+            printf("Invalid data\n");
+            return -1;
+        }
+        if (turn->black_turn[i] > 8) {
+            printf("Invalid data\n");
+            return -1;
+        }
+    }
+    return 0;
+}
+
 void input_data(Parsing* turn)
 {
     turn->round++;
