@@ -18,5 +18,7 @@ void parsing_black(Parsing* turn, int* start, int len);
 
 void initiate_board(char board[][8]);
 
+void swap(char *a, char *b);
+
 void input_data(Parsing* turn);
 #endif

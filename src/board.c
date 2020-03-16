@@ -94,6 +94,14 @@ void parsing_black(Parsing* turn, int* start, int len)
     }
 }
 
+void swap(char* a, char* b)
+{
+    char* tmp;
+    *tmp = *a;
+    *a = *b;
+    *b = *tmp;
+}
+
 void input_data(Parsing* turn)
 {
     turn->round++;
