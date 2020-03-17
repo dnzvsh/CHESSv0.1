@@ -25,6 +25,11 @@ void initiate_board(char board[][8])
     board[0][5] = 'B';
     board[0][6] = 'N';
     board[0][7] = 'R';
+    for (int i = 2; i < 6; i++) {
+        for (int j = 0; j < 8; j++) {
+            board[i][j] = ' ';
+        }
+    }
 }
 
 void parsing_white(Parsing* turn, int* start, int len)
@@ -32,7 +37,7 @@ void parsing_white(Parsing* turn, int* start, int len)
     int count = 0;
     if (turn->data[*start] - 'a' >= 0) { //все фигуры с большой буквы, -> если
                                          //первая буква - маленькая - это пешка
-        turn->white_figure = 'p';
+        turn->white_figure = 'P';
         turn->white_turn[0] = turn->data[*start] - 'a';
         count++;
     } else {
@@ -102,7 +107,7 @@ void swap(char* a, char* b)
     *b = tmp;
 }
 
-int check(Parsing* turn)
+int check(Parsing* turn, char board[][8])
 {
     for (int i = 0; i < 4; i++) {
         if (turn->white_turn[i] > 8) {
@@ -113,6 +118,14 @@ int check(Parsing* turn)
             printf("Invalid data\n");
             return -1;
         }
+    }
+    if (turn->black_figure != board[turn->black_turn[1]][turn->black_turn[0]]) {
+        printf("Invalid data\n");
+        return -1;
+    }
+    if (turn->white_figure != board[turn->white_turn[1]][turn->white_turn[0]]) {
+        printf("Invalid data\n");
+        return -1;
     }
     return 0;
 }
