@@ -20,7 +20,11 @@ void initiate_board(char board[][8]);
 
 void swap(char *a, char *b);
 
-int check(Parsing* turn, char board[][8]);
+int check(Parsing* turn,char board[][8]);
 
 void input_data(Parsing* turn);
+
+int white_pawn(Parsing* turn, char board[][8]);
+
+int black_pawn(Parsing* turn, char board[][8]);
 #endif

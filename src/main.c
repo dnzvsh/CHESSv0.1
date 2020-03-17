@@ -27,5 +27,18 @@ int main()
            turn->type_turn_black,
            turn->type_turn_white);
     t = check(turn, board);
+    if (t) {
+        return 0;
+    }
+    t = white_pawn(turn, board);
+    print_board(board);
+    if (t) {
+        return 0;
+    }
+    t = black_pawn(turn, board);
+    print_board(board);
+    if (t) {
+        return 0;
+    }
     return 0;
 }
