@@ -57,7 +57,7 @@ void parsing_white(Parsing* turn, int* start, int len)
         }
 
         if (isdigit(turn->data[i])) {
-            turn->white_turn[count] = turn->data[i] - '0';
+            turn->white_turn[count] = turn->data[i] - '1';
             count++;
         }
     }
@@ -88,7 +88,7 @@ void parsing_black(Parsing* turn, int* start, int len)
         }
 
         if (isdigit(turn->data[i])) {
-            turn->black_turn[count] = turn->data[i] - '0';
+            turn->black_turn[count] = turn->data[i] - '1';
             count++;
         }
     }
