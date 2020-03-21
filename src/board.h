@@ -12,6 +12,8 @@ typedef struct{
     int* round;
 }Parsing;
 
+void cut(char* a, char* b);
+
 void parsing_white(Parsing* turn, int* start, int len);
 
 void parsing_black(Parsing* turn, int* start, int len);

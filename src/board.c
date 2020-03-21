@@ -107,6 +107,12 @@ void swap(char* a, char* b)
     *b = tmp;
 }
 
+void cut(char* a, char* b)
+{
+    *b = *a;
+    *a = ' ';
+}
+
 int check(Parsing* turn, char board[][8])
 {
     for (int i = 0; i < 4; i++) {
