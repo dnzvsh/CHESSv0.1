@@ -12,6 +12,12 @@ typedef struct{
     int* round;
 }Parsing;
 
+void cut(char* a, char* b);
+
+int white_knight(Parsing* turn, char board[][8]);
+
+int black_knight(Parsing* turn, char board[][8]);
+
 void parsing_white(Parsing* turn, int* start, int len);
 
 void parsing_black(Parsing* turn, int* start, int len);
