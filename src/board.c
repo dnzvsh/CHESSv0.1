@@ -133,6 +133,16 @@ int check(Parsing* turn, char board[][8])
         printf("Invalid data\n");
         return -1;
     }
+    if (turn->type_turn_black == 'x'
+        && board[turn->black_turn[3]][turn->black_turn[2]] == ' ') {
+        printf("Invalid coordinate\n");
+        return -1;
+    }
+    if (turn->type_turn_white == 'x'
+        && board[turn->white_turn[3]][turn->white_turn[2]] == ' ') {
+        printf("Invalid coordinate\n");
+        return -1;
+    }
     return 0;
 }
 
