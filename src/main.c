@@ -21,6 +21,9 @@ int main()
         case 'P':
             t = white_pawn(turn, board);
             break;
+        case 'N':
+            t = white_knight(turn, board);
+            break;
         default:
             t = -1;
         }
@@ -31,6 +34,9 @@ int main()
         switch (turn->black_figure) {
         case 'p':
             t = black_pawn(turn, board);
+            break;
+        case 'n':
+            t = black_knight(turn, board);
             break;
         default:
             t = -1;

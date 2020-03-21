@@ -1,5 +1,6 @@
 #include "board.h"
 #include <ctype.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -71,17 +72,15 @@ void parsing_white(Parsing* turn, int* start, int len)
 void parsing_black(Parsing* turn, int* start, int len)
 {
     int count = 0;
-    if (turn->data[*start] - 'a' >= 0) { //все фигуры с большой буквы, -> если
-                                         //первая буква - маленькая - это пешка
+    if (turn->data[*start] - 'a' >= 0) {
         turn->black_figure = 'p';
         turn->black_turn[0] = turn->data[*start] - 'a';
         count++;
-
     } else {
-        turn->black_figure = turn->data[*start];
+        turn->black_figure = tolower(turn->data[*start]);
     }
 
-    for (int i = *start + 1; i <= len; i++) {
+    for (int i = *start + 1; i < len; i++) {
         if (turn->data[i] == 'x' || turn->data[i] == '-') {
             turn->type_turn_black = turn->data[i];
             continue;
@@ -91,7 +90,6 @@ void parsing_black(Parsing* turn, int* start, int len)
             turn->black_turn[count] = turn->data[i] - 'a';
             count++;
         }
-
         if (isdigit(turn->data[i])) {
             turn->black_turn[count] = turn->data[i] - '1';
             count++;
@@ -126,11 +124,11 @@ int check(Parsing* turn, char board[][8])
         }
     }
     if (turn->black_figure != board[turn->black_turn[1]][turn->black_turn[0]]) {
-        printf("Invalid figure\n");
+        printf("black - Invalid figure(%c)\n", turn->black_figure);
         return -1;
     }
     if (turn->white_figure != board[turn->white_turn[1]][turn->white_turn[0]]) {
-        printf("Invalid figure\n");
+        printf("white - Invalid figure\n");
         return -1;
     }
     if (turn->type_turn_black == 'x') {
@@ -143,6 +141,19 @@ int check(Parsing* turn, char board[][8])
     if (turn->type_turn_white == 'x') {
         if (board[turn->white_turn[3]][turn->white_turn[2]] == ' '
             || isupper(board[turn->white_turn[3]][turn->white_turn[2]])) {
+            printf("Invalid target\n");
+            return -1;
+        }
+    }
+
+    if (turn->type_turn_black == '-') {
+        if (board[turn->black_turn[3]][turn->black_turn[2]] != ' ') {
+            printf("Invalid target\n");
+            return -1;
+        }
+    }
+    if (turn->type_turn_white == '-') {
+        if (board[turn->white_turn[3]][turn->white_turn[2]] != ' ') {
             printf("Invalid target\n");
             return -1;
         }
@@ -262,4 +273,48 @@ void input_data(Parsing* turn)
     parsing_white(turn, &count, len);
     count++;
     parsing_black(turn, &count, len);
+}
+
+int white_knight(Parsing* turn, char board[][8])
+{
+    int letter = abs(turn->white_turn[1] - turn->white_turn[3]);
+    int number = abs(turn->white_turn[0] - turn->white_turn[2]);
+    if ((letter + number != 3) || letter == 0 || number == 0) {
+        printf("Invalid coordinate\n");
+        return -1;
+    }
+    if (turn->type_turn_white == 'x') {
+        cut(&board[turn->white_turn[1]][turn->white_turn[0]],
+            &board[turn->white_turn[3]][turn->white_turn[2]]);
+        return 0;
+    }
+    if (turn->type_turn_white == '-') {
+        swap(&board[turn->white_turn[1]][turn->white_turn[0]],
+             &board[turn->white_turn[3]][turn->white_turn[2]]);
+        return 0;
+    }
+    printf("Invalid type turn\n");
+    return -1;
+}
+
+int black_knight(Parsing* turn, char board[][8])
+{
+    int letter = abs(turn->black_turn[1] - turn->black_turn[3]);
+    int number = abs(turn->black_turn[0] - turn->black_turn[2]);
+    if ((letter + number != 3) || letter == 0 || number == 0) {
+        printf("Invalid coordinate\n");
+        return -1;
+    }
+    if (turn->type_turn_black == 'x') {
+        cut(&board[turn->black_turn[1]][turn->black_turn[0]],
+            &board[turn->black_turn[3]][turn->black_turn[2]]);
+        return 0;
+    }
+    if (turn->type_turn_black == '-') {
+        swap(&board[turn->black_turn[1]][turn->black_turn[0]],
+             &board[turn->black_turn[3]][turn->black_turn[2]]);
+        return 0;
+    }
+    printf("Invalid type turn\n");
+    return -1;
 }
