@@ -197,8 +197,7 @@ int white_pawn(Parsing* turn, char board[][8])
             printf("white - Invalid coordinate\n");
             return -1;
         }
-        if (turn->white_turn[2] - turn->white_turn[0] > 1
-            || turn->white_turn[2] - turn->white_turn[0] < 1) {
+        if (abs(turn->white_turn[2] - turn->white_turn[0]) > 1) {
             printf("while - invalid coordinate\n");
             return -1;
         }
@@ -245,8 +244,7 @@ int black_pawn(Parsing* turn, char board[][8])
             printf("black - Invalid coordinate\n");
             return -1;
         }
-        if (turn->black_turn[0] - turn->black_turn[2] > 1
-            || turn->black_turn[0] - turn->black_turn[2] < 1) {
+        if (abs(turn->black_turn[0] - turn->black_turn[2]) > 1) {
             printf("black - invalid coordinate\n");
             return -1;
         }
