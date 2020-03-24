@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void initiate_board(char board[][8])
+void initialize_board(char board[][8])
 {
     board[7][1] = 'n';
     board[7][2] = 'b';
@@ -33,7 +33,7 @@ void initiate_board(char board[][8])
     }
 }
 
-void parsing_white(Parsing* turn, int* start, int len)
+static void parse_white_turn(Parsing* turn, int* start, int len)
 {
     int count = 0;
     if (turn->data[*start] - 'a' >= 0) { //все фигуры с большой буквы, -> если
@@ -69,7 +69,7 @@ void parsing_white(Parsing* turn, int* start, int len)
     }
 }
 
-void parsing_black(Parsing* turn, int* start, int len)
+static void parse_black_turn(Parsing* turn, int* start, int len)
 {
     int count = 0;
     if (turn->data[*start] - 'a' >= 0) {
@@ -97,7 +97,7 @@ void parsing_black(Parsing* turn, int* start, int len)
     }
 }
 
-void swap(char* a, char* b)
+static void swap(char* a, char* b)
 {
     char tmp;
     tmp = *a;
@@ -105,13 +105,13 @@ void swap(char* a, char* b)
     *b = tmp;
 }
 
-void cut(char* a, char* b)
+static void cut(char* a, char* b)
 {
     *b = *a;
     *a = ' ';
 }
 
-int check(Parsing* turn, char board[][8])
+int data_validation(Parsing* turn, char board[][8])
 {
     for (int i = 0; i < 4; i++) {
         if (turn->white_turn[i] > 8) {
@@ -161,7 +161,7 @@ int check(Parsing* turn, char board[][8])
     return 0;
 }
 
-int white_pawn(Parsing* turn, char board[][8])
+int white_pawn_move(Parsing* turn, char board[][8])
 {
     if (turn->type_turn_white == '-') {
         int max_turn = 1;
@@ -169,17 +169,14 @@ int white_pawn(Parsing* turn, char board[][8])
             max_turn++;
         }
         if (turn->white_turn[0] != turn->white_turn[2]) {
-            printf("white - Wrong coordinate\n");
             return -1;
         }
         if (turn->white_turn[3] - turn->white_turn[1] > max_turn
             || turn->white_turn[3] - turn->white_turn[1] <= 0) {
-            printf("white - Invalid coordinate\n");
             return -1;
         }
         for (int i = turn->white_turn[1] + 1; i <= turn->white_turn[3]; i++) {
             if (board[i][turn->white_turn[2]] != ' ') {
-                printf("white - Figure on the way\n");
                 return -1;
             }
         }
@@ -189,27 +186,23 @@ int white_pawn(Parsing* turn, char board[][8])
     }
     if (turn->type_turn_white == 'x') {
         if (turn->white_turn[0] == turn->white_turn[2]) {
-            printf("white - Wrong coordinate\n");
             return -1;
         }
         if (turn->white_turn[3] - turn->white_turn[1] > 1
             || turn->white_turn[3] - turn->white_turn[1] <= 0) {
-            printf("white - Invalid coordinate\n");
             return -1;
         }
         if (abs(turn->white_turn[2] - turn->white_turn[0]) > 1) {
-            printf("while - invalid coordinate\n");
             return -1;
         }
         cut(&board[turn->white_turn[1]][turn->white_turn[0]],
             &board[turn->white_turn[3]][turn->white_turn[2]]);
         return 0;
     }
-    printf("Invalid type turn\n");
     return -1;
 }
 
-int black_pawn(Parsing* turn, char board[][8])
+int black_pawn_move(Parsing* turn, char board[][8])
 {
     if (turn->type_turn_black == '-') {
         int max_turn = 1;
@@ -217,16 +210,13 @@ int black_pawn(Parsing* turn, char board[][8])
             max_turn++;
         }
         if (turn->black_turn[0] != turn->black_turn[2]) {
-            printf("black - Wrong coordinate\n");
             return -1;
         }
         if (turn->black_turn[3] - turn->black_turn[1] >= 0) {
-            printf("black - Invalid coordinate\n");
             return -1;
         }
         for (int i = turn->black_turn[1] - 1; i >= turn->black_turn[3]; i--) {
             if (board[i][turn->black_turn[2]] != ' ') {
-                printf("black - Figure on the way\n");
                 return -1;
             }
         }
@@ -236,23 +226,19 @@ int black_pawn(Parsing* turn, char board[][8])
     }
     if (turn->type_turn_black == 'x') {
         if (turn->black_turn[0] == turn->black_turn[2]) {
-            printf("black - Wrong coordinate\n");
             return -1;
         }
         if (turn->black_turn[1] - turn->black_turn[3] > 1
             || turn->black_turn[1] - turn->black_turn[3] <= 0) {
-            printf("black - Invalid coordinate\n");
             return -1;
         }
         if (abs(turn->black_turn[0] - turn->black_turn[2]) > 1) {
-            printf("black - invalid coordinate\n");
             return -1;
         }
         cut(&board[turn->black_turn[1]][turn->black_turn[0]],
             &board[turn->black_turn[3]][turn->black_turn[2]]);
         return 0;
     }
-    printf("Invalid type turn\n");
     return -1;
 }
 
@@ -268,17 +254,16 @@ void input_data(Parsing* turn)
         len++;
     }
     int count = 0;
-    parsing_white(turn, &count, len);
+    parse_white_turn(turn, &count, len);
     count++;
-    parsing_black(turn, &count, len);
+    parse_black_turn(turn, &count, len);
 }
 
-int white_knight(Parsing* turn, char board[][8])
+int white_knight_move(Parsing* turn, char board[][8])
 {
     int letter = abs(turn->white_turn[1] - turn->white_turn[3]);
     int number = abs(turn->white_turn[0] - turn->white_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
-        printf("Invalid coordinate\n");
         return -1;
     }
     if (turn->type_turn_white == 'x') {
@@ -291,16 +276,14 @@ int white_knight(Parsing* turn, char board[][8])
              &board[turn->white_turn[3]][turn->white_turn[2]]);
         return 0;
     }
-    printf("Invalid type turn\n");
     return -1;
 }
 
-int black_knight(Parsing* turn, char board[][8])
+int black_knight_move(Parsing* turn, char board[][8])
 {
     int letter = abs(turn->black_turn[1] - turn->black_turn[3]);
     int number = abs(turn->black_turn[0] - turn->black_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
-        printf("Invalid coordinate\n");
         return -1;
     }
     if (turn->type_turn_black == 'x') {
@@ -313,6 +296,5 @@ int black_knight(Parsing* turn, char board[][8])
              &board[turn->black_turn[3]][turn->black_turn[2]]);
         return 0;
     }
-    printf("Invalid type turn\n");
     return -1;
 }

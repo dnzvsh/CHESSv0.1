@@ -5,44 +5,48 @@
 
 int main()
 {
-    int t = 0;
+    const int max_turn = 5950; //максимум ходов по правилам шахмат
+    int correct = 0;
     char board[8][8] = {{' '}};
-    Parsing* turn = malloc(sizeof(Parsing));
+    Parsing t;
+    Parsing* turn = &t;
     turn->round = 0;
-    initiate_board(board);
+    initialize_board(board);
     print_board(board);
-    for (int j = 0; j < 5950; j++) { // 5950 - максимум ходов по правилам шахмат
+    for (int j = 0; j < max_turn; j++) {
         input_data(turn);
-        t = check(turn, board);
-        if (t) {
+        correct = data_validation(turn, board);
+        if (correct) {
             return 0;
         }
         switch (turn->white_figure) {
         case 'P':
-            t = white_pawn(turn, board);
+            correct = white_pawn_move(turn, board);
             break;
         case 'N':
-            t = white_knight(turn, board);
+            correct = white_knight_move(turn, board);
             break;
         default:
-            t = -1;
+            correct = -1;
         }
         print_board(board);
-        if (t) {
+        if (correct) {
+            printf("Invalid white turn\n");
             return 0;
         }
         switch (turn->black_figure) {
         case 'p':
-            t = black_pawn(turn, board);
+            correct = black_pawn_move(turn, board);
             break;
         case 'n':
-            t = black_knight(turn, board);
+            correct = black_knight_move(turn, board);
             break;
         default:
-            t = -1;
+            correct = -1;
         }
         print_board(board);
-        if (t) {
+        if (correct) {
+            printf("Invalid black turn\n");
             return 0;
         }
     }
