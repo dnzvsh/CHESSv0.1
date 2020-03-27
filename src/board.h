@@ -9,12 +9,10 @@ typedef struct {
     char black_figure;
     char type_turn_white;
     char type_turn_black;
-    int* round;
+    int round;
 } Parsing;
 
-int white_knight_move(Parsing* turn, char board[][8]);
-
-int black_knight_move(Parsing* turn, char board[][8]);
+int knight_move(Parsing* turn, char board[][8]);
 
 void initialize_board(char board[][8]);
 
@@ -22,7 +20,7 @@ int data_validation(Parsing* turn, char board[][8]);
 
 void input_data(Parsing* turn);
 
-int white_pawn_move(Parsing* turn, char board[][8]);
+int pawn_move(Parsing* turn, char board[][8]);
 
-int black_pawn_move(Parsing* turn, char board[][8]);
+int pawn_cut(Parsing* turn, char board[][8]);
 #endif

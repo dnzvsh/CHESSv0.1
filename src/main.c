@@ -19,12 +19,18 @@ int main()
         if (correct) {
             return 0;
         }
+        turn->round++;
         switch (turn->white_figure) {
         case 'P':
-            correct = white_pawn_move(turn, board);
+            if (turn->type_turn_white == '-') {
+                correct = pawn_move(turn, board);
+                break;
+            }
+            correct = pawn_cut(turn, board);
             break;
         case 'N':
-            correct = white_knight_move(turn, board);
+            correct = knight_move(turn, board);
+            break;
             break;
         default:
             correct = -1;
@@ -34,12 +40,17 @@ int main()
             printf("Invalid white turn\n");
             return 0;
         }
+        turn->round++;
         switch (turn->black_figure) {
         case 'p':
-            correct = black_pawn_move(turn, board);
+            if (turn->type_turn_black == '-') {
+                correct = pawn_move(turn, board);
+                break;
+            }
+            correct = pawn_cut(turn, board);
             break;
         case 'n':
-            correct = black_knight_move(turn, board);
+            correct = knight_move(turn, board);
             break;
         default:
             correct = -1;
