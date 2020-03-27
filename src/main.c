@@ -15,11 +15,11 @@ int main()
     print_board(board);
     for (int j = 0; j < max_turn; j++) {
         input_data(turn);
+        turn->round++;
         correct = data_validation(turn, board);
         if (correct) {
             return 0;
         }
-        turn->round++;
         switch (turn->white_figure) {
         case 'P':
             if (turn->type_turn_white == '-') {
@@ -33,6 +33,7 @@ int main()
             break;
             break;
         default:
+
             correct = -1;
         }
         print_board(board);
@@ -41,6 +42,10 @@ int main()
             return 0;
         }
         turn->round++;
+        correct = data_validation(turn, board);
+        if (correct) {
+            return 0;
+        }
         switch (turn->black_figure) {
         case 'p':
             if (turn->type_turn_black == '-') {

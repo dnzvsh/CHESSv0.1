@@ -114,47 +114,51 @@ static void cut(char* a, char* b)
 //переделать под 2 цвета!!!!!
 int data_validation(Parsing* turn, char board[][8])
 {
+    int check_turn[4];
+    char figure;
+    char type_turn;
+    if (turn->round % 2 == 1) {
+        figure = turn->white_figure;
+        type_turn = turn->type_turn_white;
+        for (int i = 0; i < 4; i++) {
+            check_turn[i] = turn->white_turn[i];
+        }
+    } else {
+        figure = turn->black_figure;
+        type_turn = turn->type_turn_black;
+        for (int i = 0; i < 4; i++) {
+            check_turn[i] = turn->black_turn[i];
+        }
+    }
     for (int i = 0; i < 4; i++) {
-        if (turn->white_turn[i] > 8) {
-            printf("Invalid data\n");
-            return -1;
-        }
-        if (turn->black_turn[i] > 8) {
+        if (check_turn[i] > 8) {
             printf("Invalid data\n");
             return -1;
         }
     }
-    if (turn->black_figure != board[turn->black_turn[1]][turn->black_turn[0]]) {
-        printf("black - Invalid figure(%c)\n", turn->black_figure);
+    if (figure != board[check_turn[1]][check_turn[0]]) {
+        printf("Invalid figure(%c) %c\n",
+               figure,
+               board[check_turn[1]][check_turn[0]]);
         return -1;
     }
-    if (turn->white_figure != board[turn->white_turn[1]][turn->white_turn[0]]) {
-        printf("white - Invalid figure\n");
-        return -1;
-    }
-    if (turn->type_turn_black == 'x') {
-        if (board[turn->black_turn[3]][turn->black_turn[2]] == ' '
-            || islower(board[turn->black_turn[3]][turn->black_turn[2]])) {
-            printf("Invalid target\n");
-            return -1;
+    if (type_turn == 'x') {
+        if (turn->round % 2 == 1) {
+            if (board[check_turn[3]][check_turn[2]] == ' '
+                || isupper(board[check_turn[3]][check_turn[2]])) {
+                printf("Invalid target\n");
+                return -1;
+            }
+        } else {
+            if (board[check_turn[3]][check_turn[2]] == ' '
+                || islower(board[check_turn[3]][check_turn[2]])) {
+                printf("Invalid target\n");
+                return -1;
+            }
         }
     }
-    if (turn->type_turn_white == 'x') {
-        if (board[turn->white_turn[3]][turn->white_turn[2]] == ' '
-            || isupper(board[turn->white_turn[3]][turn->white_turn[2]])) {
-            printf("Invalid target\n");
-            return -1;
-        }
-    }
-
-    if (turn->type_turn_black == '-') {
-        if (board[turn->black_turn[3]][turn->black_turn[2]] != ' ') {
-            printf("Invalid target\n");
-            return -1;
-        }
-    }
-    if (turn->type_turn_white == '-') {
-        if (board[turn->white_turn[3]][turn->white_turn[2]] != ' ') {
+    if (type_turn == '-') {
+        if (board[check_turn[3]][check_turn[2]] != ' ') {
             printf("Invalid target\n");
             return -1;
         }
@@ -225,13 +229,16 @@ int pawn_cut(Parsing* turn, char board[][8])
         }
     }
     if (pawn_turn[0] == pawn_turn[2]) {
+        printf("1\n");
         return -1;
     }
     if (pawn_turn[2 + k] - pawn_turn[2 - k] > 1
         || pawn_turn[2 + k] - pawn_turn[2 - k] <= 0) {
+        printf("2\n");
         return -1;
     }
     if (abs(pawn_turn[1 + k] - pawn_turn[1 - k]) > 1) {
+        printf("3\n");
         return -1;
     }
     cut(&board[pawn_turn[1]][pawn_turn[0]], &board[pawn_turn[3]][pawn_turn[2]]);
@@ -240,7 +247,6 @@ int pawn_cut(Parsing* turn, char board[][8])
 
 void input_data(Parsing* turn)
 {
-    turn->round++;
     char i = getchar();
     int len = 1;
     turn->data[0] = i;
