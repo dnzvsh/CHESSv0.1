@@ -31,9 +31,10 @@ int main()
         case 'N':
             correct = knight_move(turn, board);
             break;
+        case 'R':
+            correct = rook_move(turn, board);
             break;
         default:
-
             correct = -1;
         }
         print_board(board);
@@ -56,6 +57,9 @@ int main()
             break;
         case 'n':
             correct = knight_move(turn, board);
+            break;
+        case 'r':
+            correct = rook_move(turn, board);
             break;
         default:
             correct = -1;

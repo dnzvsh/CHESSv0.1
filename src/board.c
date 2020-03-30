@@ -111,7 +111,6 @@ static void cut(char* a, char* b)
     *a = ' ';
 }
 
-//переделать под 2 цвета!!!!!
 int data_validation(Parsing* turn, char board[][8])
 {
     int check_turn[4];
@@ -229,16 +228,13 @@ int pawn_cut(Parsing* turn, char board[][8])
         }
     }
     if (pawn_turn[0] == pawn_turn[2]) {
-        printf("1\n");
         return -1;
     }
     if (pawn_turn[2 + k] - pawn_turn[2 - k] > 1
         || pawn_turn[2 + k] - pawn_turn[2 - k] <= 0) {
-        printf("2\n");
         return -1;
     }
     if (abs(pawn_turn[1 + k] - pawn_turn[1 - k]) > 1) {
-        printf("3\n");
         return -1;
     }
     cut(&board[pawn_turn[1]][pawn_turn[0]], &board[pawn_turn[3]][pawn_turn[2]]);
@@ -288,5 +284,58 @@ int knight_move(Parsing* turn, char board[][8])
     }
     swap(&board[knight_turn[1]][knight_turn[0]],
          &board[knight_turn[3]][knight_turn[2]]);
+    return 0;
+}
+
+int rook_move(Parsing* turn, char board[][8])
+{
+    int rook_turn[4];
+    char type_turn;
+    if (turn->round % 2 == 1) {
+        type_turn = turn->type_turn_white;
+        for (int i = 0; i < 4; i++) {
+            rook_turn[i] = turn->white_turn[i];
+        }
+    } else {
+        type_turn = turn->type_turn_black;
+        for (int i = 0; i < 4; i++) {
+            rook_turn[i] = turn->black_turn[i];
+        }
+    }
+    if (rook_turn[1] != rook_turn[3] && rook_turn[2] != rook_turn[0]) {
+        return -1;
+    }
+    int check = rook_turn[0], k;
+    if (rook_turn[0] > rook_turn[2] || rook_turn[1] > rook_turn[3]) {
+        k = -1;
+    } else {
+        k = 1;
+    }
+    while (check != rook_turn[2]) {
+        check += k;
+        if (check == rook_turn[2]) {
+            break;
+        }
+        if (board[rook_turn[1]][check] != ' ') {
+            return -1;
+        }
+    }
+    check = rook_turn[1];
+    while (check != rook_turn[3]) {
+        check += k;
+        if (check == rook_turn[3]) {
+            break;
+        }
+        if (board[check][rook_turn[0]] != ' ') {
+            return -1;
+        }
+    }
+    if (type_turn == 'x') {
+        cut(&board[rook_turn[1]][rook_turn[0]],
+            &board[rook_turn[3]][rook_turn[2]]);
+    } else {
+        swap(&board[rook_turn[1]][rook_turn[0]],
+             &board[rook_turn[3]][rook_turn[2]]);
+    }
     return 0;
 }

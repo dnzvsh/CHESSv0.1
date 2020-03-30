@@ -18,6 +18,8 @@ void initialize_board(char board[][8]);
 
 int data_validation(Parsing* turn, char board[][8]);
 
+int rook_move(Parsing* turn, char board[][8]);
+
 void input_data(Parsing* turn);
 
 int pawn_move(Parsing* turn, char board[][8]);
