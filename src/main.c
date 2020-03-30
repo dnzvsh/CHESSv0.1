@@ -16,7 +16,7 @@ int main()
     for (int j = 0; j < max_turn; j++) {
         input_data(turn);
         turn->round++;
-        correct = data_validation(turn, board);
+        correct = turn_validation(turn, board);
         if (correct) {
             return 0;
         }
@@ -31,9 +31,10 @@ int main()
         case 'N':
             correct = knight_move(turn, board);
             break;
+        case 'R':
+            correct = rook_move(turn, board);
             break;
         default:
-
             correct = -1;
         }
         print_board(board);
@@ -42,7 +43,7 @@ int main()
             return 0;
         }
         turn->round++;
-        correct = data_validation(turn, board);
+        correct = turn_validation(turn, board);
         if (correct) {
             return 0;
         }
@@ -56,6 +57,9 @@ int main()
             break;
         case 'n':
             correct = knight_move(turn, board);
+            break;
+        case 'r':
+            correct = rook_move(turn, board);
             break;
         default:
             correct = -1;
