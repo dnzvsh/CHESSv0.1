@@ -111,7 +111,7 @@ static void cut(char* a, char* b)
     *a = ' ';
 }
 
-int data_validation(Parsing* turn, char board[][8])
+int turn_validation(Parsing* turn, char board[][8])
 {
     int check_turn[4];
     char figure;

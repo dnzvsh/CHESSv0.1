@@ -16,7 +16,7 @@ int main()
     for (int j = 0; j < max_turn; j++) {
         input_data(turn);
         turn->round++;
-        correct = data_validation(turn, board);
+        correct = turn_validation(turn, board);
         if (correct) {
             return 0;
         }
@@ -43,7 +43,7 @@ int main()
             return 0;
         }
         turn->round++;
-        correct = data_validation(turn, board);
+        correct = turn_validation(turn, board);
         if (correct) {
             return 0;
         }

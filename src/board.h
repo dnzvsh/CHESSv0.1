@@ -16,7 +16,7 @@ int knight_move(Parsing* turn, char board[][8]);
 
 void initialize_board(char board[][8]);
 
-int data_validation(Parsing* turn, char board[][8]);
+int turn_validation(Parsing* turn, char board[][8]);
 
 int rook_move(Parsing* turn, char board[][8]);
 
