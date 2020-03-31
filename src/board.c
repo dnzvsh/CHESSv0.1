@@ -33,6 +33,21 @@ void initialize_board(char board[][8])
     }
 }
 
+static void initialize_color(Parsing* turn, char* type_turn, int* turn_figure)
+{
+    if (turn->round % 2 == 1) {
+        *type_turn = turn->type_turn_white;
+        for (int i = 0; i < 4; i++) {
+            turn_figure[i] = turn->white_turn[i];
+        }
+    } else {
+        *type_turn = turn->type_turn_black;
+        for (int i = 0; i < 4; i++) {
+            turn_figure[i] = turn->black_turn[i];
+        }
+    }
+}
+
 static void parse_white_turn(Parsing* turn, int* start, int len)
 {
     int count = 0;
@@ -261,17 +276,7 @@ int knight_move(Parsing* turn, char board[][8])
 {
     int knight_turn[4];
     char turn_type;
-    if (turn->round % 2 == 1) {
-        turn_type = turn->type_turn_white;
-        for (int i = 0; i < 4; i++) {
-            knight_turn[i] = turn->white_turn[i];
-        }
-    } else {
-        turn_type = turn->type_turn_black;
-        for (int i = 0; i < 4; i++) {
-            knight_turn[i] = turn->black_turn[i];
-        }
-    }
+    initialize_color(turn, &turn_type, knight_turn);
     int letter = abs(knight_turn[1] - knight_turn[3]);
     int number = abs(knight_turn[0] - knight_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
@@ -291,17 +296,7 @@ int rook_move(Parsing* turn, char board[][8])
 {
     int rook_turn[4];
     char type_turn;
-    if (turn->round % 2 == 1) {
-        type_turn = turn->type_turn_white;
-        for (int i = 0; i < 4; i++) {
-            rook_turn[i] = turn->white_turn[i];
-        }
-    } else {
-        type_turn = turn->type_turn_black;
-        for (int i = 0; i < 4; i++) {
-            rook_turn[i] = turn->black_turn[i];
-        }
-    }
+    initialize_color(turn, &type_turn, rook_turn);
     if (rook_turn[1] != rook_turn[3] && rook_turn[2] != rook_turn[0]) {
         return -1;
     }
@@ -337,5 +332,84 @@ int rook_move(Parsing* turn, char board[][8])
         swap(&board[rook_turn[1]][rook_turn[0]],
              &board[rook_turn[3]][rook_turn[2]]);
     }
+    return 0;
+}
+
+int bishop_move(Parsing* turn, char board[][8])
+{
+    int bishop_turn[4];
+    char turn_type;
+    initialize_color(turn, &turn_type, bishop_turn);
+    if (bishop_turn[1] == bishop_turn[3] || bishop_turn[0] == bishop_turn[2]) {
+        return -1;
+    }
+    if (abs(bishop_turn[1] - bishop_turn[3])
+        != abs(bishop_turn[0] - bishop_turn[2])) {
+        return -1;
+    }
+    int horizontal, vertical;
+    if (bishop_turn[0] > bishop_turn[2]) {
+        vertical = -1;
+    } else {
+        vertical = 1;
+    }
+    if (bishop_turn[1] > bishop_turn[3]) {
+        horizontal = -1;
+    } else {
+        horizontal = 1;
+    }
+    for (int i = bishop_turn[0] + vertical, j = bishop_turn[1] + horizontal;
+         i != bishop_turn[2];
+         i += vertical, j += horizontal) {
+        printf("%d %d %c\n", i, j, board[j][i]);
+        if (board[j][i] != ' ') {
+            return -1;
+        }
+    }
+    if (turn_type == '-') {
+        swap(&board[bishop_turn[1]][bishop_turn[0]],
+             &board[bishop_turn[3]][bishop_turn[2]]);
+        return 0;
+    }
+    cut(&board[bishop_turn[1]][bishop_turn[0]],
+        &board[bishop_turn[3]][bishop_turn[2]]);
+    return 0;
+}
+
+int queen_move(Parsing* turn, char board[][8])
+{
+    if (turn->round % 2 == 1) {
+        if (turn->white_turn[0] == turn->white_turn[2]
+            || turn->white_turn[1] == turn->white_turn[3]) {
+            return rook_move(turn, board);
+        } else {
+            return bishop_move(turn, board);
+        }
+    } else {
+        if (turn->black_turn[0] == turn->black_turn[2]
+            || turn->black_turn[1] == turn->black_turn[3]) {
+            return rook_move(turn, board);
+        } else {
+            return bishop_move(turn, board);
+        }
+    }
+}
+
+int king_move(Parsing* turn, char board[][8])
+{
+    char turn_type;
+    int king_turn[4];
+    initialize_color(turn, &turn_type, king_turn);
+    int check1 = abs(king_turn[0] - king_turn[2]);
+    int check2 = abs(king_turn[1] - king_turn[3]);
+    if (check1 + check2 > 1 && (check1 == 0 || check2 == 0)) {
+        return -1;
+    }
+    if (turn_type == '-') {
+        swap(&board[king_turn[1]][king_turn[0]],
+             &board[king_turn[3]][king_turn[2]]);
+        return 0;
+    }
+    cut(&board[king_turn[1]][king_turn[0]], &board[king_turn[3]][king_turn[2]]);
     return 0;
 }
