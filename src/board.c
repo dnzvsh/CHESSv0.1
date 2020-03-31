@@ -375,3 +375,22 @@ int bishop_move(Parsing* turn, char board[][8])
         &board[bishop_turn[3]][bishop_turn[2]]);
     return 0;
 }
+
+int queen_move(Parsing* turn, char board[][8])
+{
+    if (turn->round % 2 == 1) {
+        if (turn->white_turn[0] == turn->white_turn[2]
+            || turn->white_turn[1] == turn->white_turn[3]) {
+            return rook_move(turn, board);
+        } else {
+            return bishop_move(turn, board);
+        }
+    } else {
+        if (turn->black_turn[0] == turn->black_turn[2]
+            || turn->black_turn[1] == turn->black_turn[3]) {
+            return rook_move(turn, board);
+        } else {
+            return bishop_move(turn, board);
+        }
+    }
+}

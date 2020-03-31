@@ -37,6 +37,9 @@ int main()
         case 'B':
             correct = bishop_move(turn, board);
             break;
+        case 'Q':
+            correct = queen_move(turn, board);
+            break;
         default:
             correct = -1;
         }
@@ -66,6 +69,9 @@ int main()
             break;
         case 'b':
             correct = bishop_move(turn, board);
+            break;
+        case 'q':
+            correct = queen_move(turn, board);
             break;
         default:
             correct = -1;
