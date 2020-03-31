@@ -34,6 +34,9 @@ int main()
         case 'R':
             correct = rook_move(turn, board);
             break;
+        case 'B':
+            correct = bishop_move(turn, board);
+            break;
         default:
             correct = -1;
         }
@@ -60,6 +63,9 @@ int main()
             break;
         case 'r':
             correct = rook_move(turn, board);
+            break;
+        case 'b':
+            correct = bishop_move(turn, board);
             break;
         default:
             correct = -1;

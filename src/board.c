@@ -334,3 +334,44 @@ int rook_move(Parsing* turn, char board[][8])
     }
     return 0;
 }
+
+int bishop_move(Parsing* turn, char board[][8])
+{
+    int bishop_turn[4];
+    char turn_type;
+    initialize_color(turn, &turn_type, bishop_turn);
+    if (bishop_turn[1] == bishop_turn[3] || bishop_turn[0] == bishop_turn[2]) {
+        return -1;
+    }
+    if (abs(bishop_turn[1] - bishop_turn[3])
+        != abs(bishop_turn[0] - bishop_turn[2])) {
+        return -1;
+    }
+    int horizontal, vertical;
+    if (bishop_turn[0] > bishop_turn[2]) {
+        vertical = -1;
+    } else {
+        vertical = 1;
+    }
+    if (bishop_turn[1] > bishop_turn[3]) {
+        horizontal = -1;
+    } else {
+        horizontal = 1;
+    }
+    for (int i = bishop_turn[0] + vertical, j = bishop_turn[1] + horizontal;
+         i != bishop_turn[2];
+         i += vertical, j += horizontal) {
+        printf("%d %d %c\n", i, j, board[j][i]);
+        if (board[j][i] != ' ') {
+            return -1;
+        }
+    }
+    if (turn_type == '-') {
+        swap(&board[bishop_turn[1]][bishop_turn[0]],
+             &board[bishop_turn[3]][bishop_turn[2]]);
+        return 0;
+    }
+    cut(&board[bishop_turn[1]][bishop_turn[0]],
+        &board[bishop_turn[3]][bishop_turn[2]]);
+    return 0;
+}
