@@ -33,6 +33,21 @@ void initialize_board(char board[][8])
     }
 }
 
+static void initialize_color(Parsing* turn, char* type_turn, int* turn_figure)
+{
+    if (turn->round % 2 == 1) {
+        *type_turn = turn->type_turn_white;
+        for (int i = 0; i < 4; i++) {
+            turn_figure[i] = turn->white_turn[i];
+        }
+    } else {
+        *type_turn = turn->type_turn_black;
+        for (int i = 0; i < 4; i++) {
+            turn_figure[i] = turn->black_turn[i];
+        }
+    }
+}
+
 static void parse_white_turn(Parsing* turn, int* start, int len)
 {
     int count = 0;
@@ -261,17 +276,7 @@ int knight_move(Parsing* turn, char board[][8])
 {
     int knight_turn[4];
     char turn_type;
-    if (turn->round % 2 == 1) {
-        turn_type = turn->type_turn_white;
-        for (int i = 0; i < 4; i++) {
-            knight_turn[i] = turn->white_turn[i];
-        }
-    } else {
-        turn_type = turn->type_turn_black;
-        for (int i = 0; i < 4; i++) {
-            knight_turn[i] = turn->black_turn[i];
-        }
-    }
+    initialize_color(turn, &turn_type, knight_turn);
     int letter = abs(knight_turn[1] - knight_turn[3]);
     int number = abs(knight_turn[0] - knight_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
@@ -291,17 +296,7 @@ int rook_move(Parsing* turn, char board[][8])
 {
     int rook_turn[4];
     char type_turn;
-    if (turn->round % 2 == 1) {
-        type_turn = turn->type_turn_white;
-        for (int i = 0; i < 4; i++) {
-            rook_turn[i] = turn->white_turn[i];
-        }
-    } else {
-        type_turn = turn->type_turn_black;
-        for (int i = 0; i < 4; i++) {
-            rook_turn[i] = turn->black_turn[i];
-        }
-    }
+    initialize_color(turn, &type_turn, rook_turn);
     if (rook_turn[1] != rook_turn[3] && rook_turn[2] != rook_turn[0]) {
         return -1;
     }
