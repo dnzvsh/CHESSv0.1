@@ -29,4 +29,6 @@ int pawn_cut(Parsing* turn, char board[][8]);
 int bishop_move(Parsing* turn, char board[][8]);
 
 int queen_move(Parsing* turn, char board[][8]);
+
+int king_move(Parsing* turn, char board[][8]);
 #endif

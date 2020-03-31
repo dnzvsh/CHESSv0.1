@@ -40,6 +40,9 @@ int main()
         case 'Q':
             correct = queen_move(turn, board);
             break;
+        case 'K':
+            correct = king_move(turn, board);
+            break;
         default:
             correct = -1;
         }
@@ -72,6 +75,9 @@ int main()
             break;
         case 'q':
             correct = queen_move(turn, board);
+            break;
+        case 'k':
+            correct = king_move(turn, board);
             break;
         default:
             correct = -1;

@@ -394,3 +394,22 @@ int queen_move(Parsing* turn, char board[][8])
         }
     }
 }
+
+int king_move(Parsing* turn, char board[][8])
+{
+    char turn_type;
+    int king_turn[4];
+    initialize_color(turn, &turn_type, king_turn);
+    int check1 = abs(king_turn[0] - king_turn[2]);
+    int check2 = abs(king_turn[1] - king_turn[3]);
+    if (check1 + check2 > 1 && (check1 == 0 || check2 == 0)) {
+        return -1;
+    }
+    if (turn_type == '-') {
+        swap(&board[king_turn[1]][king_turn[0]],
+             &board[king_turn[3]][king_turn[2]]);
+        return 0;
+    }
+    cut(&board[king_turn[1]][king_turn[0]], &board[king_turn[3]][king_turn[2]]);
+    return 0;
+}
