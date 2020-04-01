@@ -62,67 +62,44 @@ initialize_color(Parsing* turn, char* type_turn, int* turn_figure, char* figure)
     }
 }*/
 
-static char* initialize_color_type_turn(Parsing* turn)
+static void parse_turn(
+        int round,
+        char* data,
+        char* type_turn,
+        char* figure,
+        int* start,
+        int* turn_figure,
+        int len)
 {
-    if (turn->round % 2 == 1) {
-        return &turn->type_turn_white;
-    } else {
-        return &turn->type_turn_black;
-    }
-}
-
-static char* initialize_color_figure(Parsing* turn)
-{
-    if (turn->round % 2 == 1) {
-        return &turn->white_figure;
-    } else {
-        return &turn->black_figure;
-    }
-}
-
-static int* initialize_color_turn(Parsing* turn)
-{
-    if (turn->round % 2 == 1) {
-        return turn->white_turn;
-    } else {
-        return turn->black_turn;
-    }
-}
-
-static void parse_turn(Parsing* turn, int* start, int len)
-{
-    int* turn_figure = initialize_color_turn(turn);
-    char* figure = initialize_color_figure(turn);
     int count = 0;
     int k = 32;
-    if (turn->round % 2 == 1) {
+    if (round % 2 == 1) {
         k = 0;
     }
-    if (turn->data[*start] - 'a' >= 0) {
+    if (data[*start] - 'a' >= 0) {
         *figure = 'P' + k;
-        turn_figure[0] = turn->data[*start] - 'a';
+        turn_figure[0] = data[*start] - 'a';
         count++;
     } else {
-        *figure = turn->data[*start] + k;
+        *figure = data[*start] + k;
     }
     for (int i = *start + 1; i < len; i++) {
-        if (turn->data[i] == ' ') { // eсли смена хода, выходим из цикла
+        if (data[i] == ' ') { // eсли смена хода, выходим из цикла
             *start = i;
             break;
         }
-        if (turn->data[i] == 'x' || turn->data[i] == '-') {
-            char* type_turn = initialize_color_type_turn(turn);
-            *type_turn = turn->data[i];
+        if (data[i] == 'x' || data[i] == '-') {
+            *type_turn = data[i];
             continue;
         }
 
-        if (isalpha(turn->data[i])) {
-            turn_figure[count] = turn->data[i] - 'a';
+        if (isalpha(data[i])) {
+            turn_figure[count] = data[i] - 'a';
             count++;
         }
 
-        if (isdigit(turn->data[i])) {
-            turn_figure[count] = turn->data[i] - '1';
+        if (isdigit(data[i])) {
+            turn_figure[count] = data[i] - '1';
             count++;
         }
     }
@@ -158,33 +135,35 @@ static int pawn_cut(int k, char board[][8], int* pawn_turn)
     return 0;
 }
 
-int turn_validation(Parsing* turn, char board[][8])
+int turn_validation(
+        int round,
+        int* check_turn,
+        char figure,
+        char type_turn,
+        char board[][8])
 {
-    int* check_turn = initialize_color_turn(turn);
-    char* figure = initialize_color_figure(turn);
-    char* type_turn = initialize_color_type_turn(turn);
     for (int i = 0; i < 4; i++) {
         if (check_turn[i] > 8) {
             printf("Invalid data\n");
             return -1;
         }
     }
-    if (*figure != board[check_turn[1]][check_turn[0]]) {
+    if (figure != board[check_turn[1]][check_turn[0]]) {
         printf("Invalid figure(%c) %c\n",
-               *figure,
+               figure,
                board[check_turn[1]][check_turn[0]]);
         printf("%d %d\n", check_turn[1], check_turn[0]);
         return -1;
     }
-    if (*type_turn == 'x') {
+    if (type_turn == 'x') {
         if (board[check_turn[3]][check_turn[2]] == ' '
             || is_lower_or_upper(board[check_turn[3]][check_turn[2]])
-                    == (turn->round % 2)) {
+                    == (round % 2)) {
             printf("Invalid target\n");
             return -1;
         }
     }
-    if (*type_turn == '-') {
+    if (type_turn == '-') {
         if (board[check_turn[3]][check_turn[2]] != ' ') {
             printf("Invalid target\n");
             return -1;
@@ -193,14 +172,12 @@ int turn_validation(Parsing* turn, char board[][8])
     return 0;
 }
 
-int pawn_move(Parsing* turn, char board[][8])
+int pawn_move(int round, int* pawn_turn, char type_turn, char board[][8])
 {
     int k = 1;
-    int* pawn_turn = initialize_color_turn(turn);
-    char* type_turn = initialize_color_type_turn(turn);
-    if (*type_turn == '-') {
+    if (type_turn == '-') {
         int max_turn = 1;
-        if (turn->round % 2 == 1) {
+        if (round % 2 == 1) {
             if (pawn_turn[1] == 1) {
                 max_turn++;
             }
@@ -241,22 +218,34 @@ void input_data(Parsing* turn)
     }
     int count = 0;
     turn->round++;
-    parse_turn(turn, &count, len);
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_white,
+            &turn->white_figure,
+            &count,
+            turn->white_turn,
+            len);
     count++;
     turn->round++;
-    parse_turn(turn, &count, len);
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_black,
+            &turn->black_figure,
+            &count,
+            turn->black_turn,
+            len);
 }
 
-int knight_move(Parsing* turn, char board[][8])
+int knight_move(int* knight_turn, char turn_type, char board[][8])
 {
-    int* knight_turn = initialize_color_turn(turn);
-    char* turn_type = initialize_color_type_turn(turn);
     int letter = abs(knight_turn[1] - knight_turn[3]);
     int number = abs(knight_turn[0] - knight_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
         return -1;
     }
-    if (*turn_type == 'x') {
+    if (turn_type == 'x') {
         cut(&board[knight_turn[1]][knight_turn[0]],
             &board[knight_turn[3]][knight_turn[2]]);
         return 0;
@@ -266,10 +255,8 @@ int knight_move(Parsing* turn, char board[][8])
     return 0;
 }
 
-int rook_move(Parsing* turn, char board[][8])
+int rook_move(int* rook_turn, char type_turn, char board[][8])
 {
-    int* rook_turn = initialize_color_turn(turn);
-    char* type_turn = initialize_color_type_turn(turn);
     if (rook_turn[1] != rook_turn[3] && rook_turn[2] != rook_turn[0]) {
         return -1;
     }
@@ -298,7 +285,7 @@ int rook_move(Parsing* turn, char board[][8])
             return -1;
         }
     }
-    if (*type_turn == 'x') {
+    if (type_turn == 'x') {
         cut(&board[rook_turn[1]][rook_turn[0]],
             &board[rook_turn[3]][rook_turn[2]]);
     } else {
@@ -308,10 +295,8 @@ int rook_move(Parsing* turn, char board[][8])
     return 0;
 }
 
-int bishop_move(Parsing* turn, char board[][8])
+int bishop_move(int* bishop_turn, char turn_type, char board[][8])
 {
-    int* bishop_turn = initialize_color_turn(turn);
-    char* turn_type = initialize_color_type_turn(turn);
     if (bishop_turn[1] == bishop_turn[3] || bishop_turn[0] == bishop_turn[2]) {
         return -1;
     }
@@ -337,7 +322,7 @@ int bishop_move(Parsing* turn, char board[][8])
             return -1;
         }
     }
-    if (*turn_type == '-') {
+    if (turn_type == '-') {
         swap(&board[bishop_turn[1]][bishop_turn[0]],
              &board[bishop_turn[3]][bishop_turn[2]]);
         return 0;
@@ -347,35 +332,23 @@ int bishop_move(Parsing* turn, char board[][8])
     return 0;
 }
 
-int queen_move(Parsing* turn, char board[][8])
+int queen_move(int* queen_turn, char type_turn, char board[][8])
 {
-    if (turn->round % 2 == 1) {
-        if (turn->white_turn[0] == turn->white_turn[2]
-            || turn->white_turn[1] == turn->white_turn[3]) {
-            return rook_move(turn, board);
-        } else {
-            return bishop_move(turn, board);
-        }
+    if (queen_turn[0] == queen_turn[2] || queen_turn[1] == queen_turn[3]) {
+        return rook_move(queen_turn, type_turn, board);
     } else {
-        if (turn->black_turn[0] == turn->black_turn[2]
-            || turn->black_turn[1] == turn->black_turn[3]) {
-            return rook_move(turn, board);
-        } else {
-            return bishop_move(turn, board);
-        }
+        return bishop_move(queen_turn, type_turn, board);
     }
 }
 
-int king_move(Parsing* turn, char board[][8])
+int king_move(int* king_turn, char turn_type, char board[][8])
 {
-    char* turn_type = initialize_color_type_turn(turn);
-    int* king_turn = initialize_color_turn(turn);
     int check1 = abs(king_turn[0] - king_turn[2]);
     int check2 = abs(king_turn[1] - king_turn[3]);
     if (check1 + check2 > 1 && (check1 == 0 || check2 == 0)) {
         return -1;
     }
-    if (*turn_type == '-') {
+    if (turn_type == '-') {
         swap(&board[king_turn[1]][king_turn[0]],
              &board[king_turn[3]][king_turn[2]]);
         return 0;
@@ -384,48 +357,54 @@ int king_move(Parsing* turn, char board[][8])
     return 0;
 }
 
-int turn_figure(Parsing* turn, char board[][8])
+int turn_figure(
+        int* round,
+        int* figure_turn,
+        char figure,
+        char type_turn,
+        char board[][8])
 {
     int k = 0;
-    int correct;
-    turn->round++;
-    correct = turn_validation(turn, board);
-    if (correct) {
+    int uncorrect;
+    *round += 1;
+    uncorrect = turn_validation(*round, figure_turn, figure, type_turn, board);
+    if (uncorrect) {
         return -1;
     }
-    if (turn->round % 2 == 0) {
+    if (*round % 2 == 0) {
         k += 32;
     }
-    switch (turn->white_figure) {
+    switch (figure) {
     case 'P':
     case 'p':
-        correct = pawn_move(turn, board);
+        uncorrect = pawn_move(*round, figure_turn, type_turn, board);
         break;
     case 'N':
     case 'n':
-        correct = knight_move(turn, board);
+        uncorrect = knight_move(figure_turn, type_turn, board);
         break;
     case 'R':
     case 'r':
-        correct = rook_move(turn, board);
+        uncorrect = rook_move(figure_turn, type_turn, board);
         break;
     case 'B':
     case 'b':
-        correct = bishop_move(turn, board);
+        uncorrect = bishop_move(figure_turn, type_turn, board);
         break;
     case 'Q':
     case 'q':
-        correct = queen_move(turn, board);
+        uncorrect = queen_move(figure_turn, type_turn, board);
         break;
     case 'K':
     case 'k':
-        correct = king_move(turn, board);
+        uncorrect = king_move(figure_turn, type_turn, board);
         break;
     default:
-        correct = -1;
+        uncorrect = -1;
     }
-    if (correct) {
+    if (uncorrect) {
         return -1;
     }
+    printf("Turn - %d\n", (*round / 2));
     return 0;
 }
