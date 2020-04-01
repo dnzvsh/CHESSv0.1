@@ -22,11 +22,7 @@ int main()
         }
         switch (turn->white_figure) {
         case 'P':
-            if (turn->type_turn_white == '-') {
-                correct = pawn_move(turn, board);
-                break;
-            }
-            correct = pawn_cut(turn, board);
+            correct = pawn_move(turn, board);
             break;
         case 'N':
             correct = knight_move(turn, board);
@@ -58,11 +54,7 @@ int main()
         }
         switch (turn->black_figure) {
         case 'p':
-            if (turn->type_turn_black == '-') {
-                correct = pawn_move(turn, board);
-                break;
-            }
-            correct = pawn_cut(turn, board);
+            correct = pawn_move(turn, board);
             break;
         case 'n':
             correct = knight_move(turn, board);
