@@ -383,3 +383,49 @@ int king_move(Parsing* turn, char board[][8])
     cut(&board[king_turn[1]][king_turn[0]], &board[king_turn[3]][king_turn[2]]);
     return 0;
 }
+
+int turn_figure(Parsing* turn, char board[][8])
+{
+    int k = 0;
+    int correct;
+    turn->round++;
+    correct = turn_validation(turn, board);
+    if (correct) {
+        return -1;
+    }
+    if (turn->round % 2 == 0) {
+        k += 32;
+    }
+    switch (turn->white_figure) {
+    case 'P':
+    case 'p':
+        correct = pawn_move(turn, board);
+        break;
+    case 'N':
+    case 'n':
+        correct = knight_move(turn, board);
+        break;
+    case 'R':
+    case 'r':
+        correct = rook_move(turn, board);
+        break;
+    case 'B':
+    case 'b':
+        correct = bishop_move(turn, board);
+        break;
+    case 'Q':
+    case 'q':
+        correct = queen_move(turn, board);
+        break;
+    case 'K':
+    case 'k':
+        correct = king_move(turn, board);
+        break;
+    default:
+        correct = -1;
+    }
+    if (correct) {
+        return -1;
+    }
+    return 0;
+}
