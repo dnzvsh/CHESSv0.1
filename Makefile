@@ -25,4 +25,4 @@ build/test/board_test.o: src/board.h thirdparty/ctest.h src/board_print_plain.h
 	gcc -I thirdparty -I src -c test/board_test.c -o build/test/board_test.o
 
 clean:
-	rm -rf *.o bin/chess-test bin/chess		
+	rm -rf  build/test/board_test.o bin/chess bin/chess-test build/src/board.o build/src/main.o build/src/board_print_plain.o build/test/main.o 
