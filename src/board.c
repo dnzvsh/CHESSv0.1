@@ -122,14 +122,14 @@ static void cut(char* a, char* b)
 static int pawn_cut(int k, char board[][8], int* pawn_turn)
 {
     if (pawn_turn[0] == pawn_turn[2]) {
-        return -1;
+        return -6;
     }
     if (pawn_turn[2 + k] - pawn_turn[2 - k] > 1
         || pawn_turn[2 + k] - pawn_turn[2 - k] <= 0) {
-        return -1;
+        return -5;
     }
     if (abs(pawn_turn[1 + k] - pawn_turn[1 - k]) > 1) {
-        return -1;
+        return -8;
     }
     cut(&board[pawn_turn[1]][pawn_turn[0]], &board[pawn_turn[3]][pawn_turn[2]]);
     return 0;
@@ -144,29 +144,22 @@ int turn_validation(
 {
     for (int i = 0; i < 4; i++) {
         if (check_turn[i] > 8) {
-            printf("Invalid data\n");
             return -1;
         }
     }
     if (figure != board[check_turn[1]][check_turn[0]]) {
-        printf("Invalid figure(%c) %c\n",
-               figure,
-               board[check_turn[1]][check_turn[0]]);
-        printf("%d %d\n", check_turn[1], check_turn[0]);
-        return -1;
+        return -2;
     }
     if (type_turn == 'x') {
         if (board[check_turn[3]][check_turn[2]] == ' '
             || is_lower_or_upper(board[check_turn[3]][check_turn[2]])
                     == (round % 2)) {
-            printf("Invalid target\n");
-            return -1;
+            return -3;
         }
     }
     if (type_turn == '-') {
         if (board[check_turn[3]][check_turn[2]] != ' ') {
-            printf("Invalid target\n");
-            return -1;
+            return -3;
         }
     }
     return 0;
@@ -188,15 +181,15 @@ int pawn_move(int round, int* pawn_turn, char type_turn, char board[][8])
             }
         }
         if (pawn_turn[0] != pawn_turn[2]) {
-            return -1;
+            return -4;
         }
         if ((pawn_turn[3] - pawn_turn[1]) * k > max_turn
             || (pawn_turn[3] - pawn_turn[1]) * k <= 0) {
-            return -1;
+            return -5;
         }
         for (int i = pawn_turn[1] + k; i != pawn_turn[3]; i += k) {
             if (board[i][pawn_turn[2]] != ' ') {
-                return -1;
+                return -7;
             }
         }
         swap(&board[pawn_turn[1]][pawn_turn[0]],
@@ -243,7 +236,7 @@ int knight_move(int* knight_turn, char turn_type, char board[][8])
     int letter = abs(knight_turn[1] - knight_turn[3]);
     int number = abs(knight_turn[0] - knight_turn[2]);
     if ((letter + number != 3) || letter == 0 || number == 0) {
-        return -1;
+        return -9;
     }
     if (turn_type == 'x') {
         cut(&board[knight_turn[1]][knight_turn[0]],
@@ -258,7 +251,7 @@ int knight_move(int* knight_turn, char turn_type, char board[][8])
 int rook_move(int* rook_turn, char type_turn, char board[][8])
 {
     if (rook_turn[1] != rook_turn[3] && rook_turn[2] != rook_turn[0]) {
-        return -1;
+        return -10;
     }
     int check = rook_turn[0], k;
     if (rook_turn[0] > rook_turn[2] || rook_turn[1] > rook_turn[3]) {
@@ -272,7 +265,7 @@ int rook_move(int* rook_turn, char type_turn, char board[][8])
             break;
         }
         if (board[rook_turn[1]][check] != ' ') {
-            return -1;
+            return -11;
         }
     }
     check = rook_turn[1];
@@ -282,7 +275,7 @@ int rook_move(int* rook_turn, char type_turn, char board[][8])
             break;
         }
         if (board[check][rook_turn[0]] != ' ') {
-            return -1;
+            return -11;
         }
     }
     if (type_turn == 'x') {
@@ -298,11 +291,11 @@ int rook_move(int* rook_turn, char type_turn, char board[][8])
 int bishop_move(int* bishop_turn, char turn_type, char board[][8])
 {
     if (bishop_turn[1] == bishop_turn[3] || bishop_turn[0] == bishop_turn[2]) {
-        return -1;
+        return -12;
     }
     if (abs(bishop_turn[1] - bishop_turn[3])
         != abs(bishop_turn[0] - bishop_turn[2])) {
-        return -1;
+        return -13;
     }
     int horizontal, vertical;
     if (bishop_turn[0] > bishop_turn[2]) {
@@ -319,7 +312,7 @@ int bishop_move(int* bishop_turn, char turn_type, char board[][8])
          i != bishop_turn[2];
          i += vertical, j += horizontal) {
         if (board[j][i] != ' ') {
-            return -1;
+            return -11;
         }
     }
     if (turn_type == '-') {
@@ -346,7 +339,7 @@ int king_move(int* king_turn, char turn_type, char board[][8])
     int check1 = abs(king_turn[0] - king_turn[2]);
     int check2 = abs(king_turn[1] - king_turn[3]);
     if (check1 + check2 > 1 && (check1 == 0 || check2 == 0)) {
-        return -1;
+        return -14;
     }
     if (turn_type == '-') {
         swap(&board[king_turn[1]][king_turn[0]],
@@ -357,6 +350,58 @@ int king_move(int* king_turn, char turn_type, char board[][8])
     return 0;
 }
 
+const void parse_error_code(int error_code)
+{
+    switch (error_code) {
+    case -1:
+        printf("Выход за границу доски\n");
+        break;
+    case -2:
+        printf("Выбор неправильной фигуры для хода\n");
+        break;
+    case -3:
+        printf("Ошибка выбора координаты хода \n");
+        break;
+    case -4:
+        printf("Тихий ход пешки не по прямой!\n");
+        break;
+
+    case -5:
+        printf("Некорректные координаты хода пешки\n");
+        break;
+    case -6:
+        printf("Ход пешки по прямой при рубке!\n");
+        break;
+    case -7:
+        printf("На пути пешки есть фигура!\n");
+        break;
+    case -8:
+        printf("Ход пешки в обратную сторону!\n");
+        break;
+    case -9:
+        printf("Некорректный ход коня!\b");
+        break;
+    case -10:
+        printf("Ходьба ладьи по диагонали!\n");
+        break;
+    case -11:
+        printf("Фигура на пути! \n");
+        break;
+    case -12:
+        printf("Ходьба слона по прямой!\n");
+        break;
+    case -13:
+        printf("Хотьба не по диагонали!\n");
+        break;
+    case -14:
+        printf("Некорректный ход короля!\n");
+        break;
+    case -15:
+        printf("Нет такой фигуры!\n");
+        break;
+    }
+}
+
 int turn_figure(
         int* round,
         int* figure_turn,
@@ -364,15 +409,12 @@ int turn_figure(
         char type_turn,
         char board[][8])
 {
-    int k = 0;
     int uncorrect;
     *round += 1;
     uncorrect = turn_validation(*round, figure_turn, figure, type_turn, board);
     if (uncorrect) {
+        parse_error_code(uncorrect);
         return -1;
-    }
-    if (*round % 2 == 0) {
-        k += 32;
     }
     switch (figure) {
     case 'P':
@@ -400,11 +442,11 @@ int turn_figure(
         uncorrect = king_move(figure_turn, type_turn, board);
         break;
     default:
-        uncorrect = -1;
+        uncorrect = -15;
     }
     if (uncorrect) {
+        parse_error_code(uncorrect);
         return -1;
     }
-    printf("Turn - %d\n", (*round / 2));
     return 0;
 }

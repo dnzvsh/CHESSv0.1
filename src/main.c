@@ -23,7 +23,6 @@ int main()
                 board);
         print_board(board);
         if (uncorrect) {
-            printf("Invalid turn\n");
             return 0;
         }
         uncorrect = turn_figure(
@@ -34,7 +33,6 @@ int main()
                 board);
         print_board(board);
         if (uncorrect) {
-            printf("Invalid turn\n");
             return 0;
         }
     }
