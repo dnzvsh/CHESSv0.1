@@ -41,4 +41,6 @@ int turn_figure(
         char board[][8]);
 
 int king_move(int* king_turn, char turn_type, char board[][8]);
+
+void parse_round(Parsing* turn, char* data);
 #endif

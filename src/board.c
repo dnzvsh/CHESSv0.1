@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void initialize_board(char board[][8])
 {
@@ -31,6 +32,31 @@ void initialize_board(char board[][8])
             board[i][j] = ' ';
         }
     }
+}
+
+void parse_round(Parsing* turn, char* data)
+{
+    int start = 2;
+    size_t len = strlen(data);
+    turn->round++;
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_white,
+            &turn->white_figure,
+            &start,
+            turn->white_turn,
+            len);
+    start++;
+    turn->round++;
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_black,
+            &turn->black_figure,
+            &start,
+            turn->black_turn,
+            len);
 }
 
 static int is_lower_or_upper(char a)
@@ -67,9 +93,9 @@ static void parse_turn(
         char* data,
         char* type_turn,
         char* figure,
-        int* start,
+        size_t* start,
         int* turn_figure,
-        int len)
+        size_t len)
 {
     int count = 0;
     int k = 32;
@@ -83,7 +109,7 @@ static void parse_turn(
     } else {
         *figure = data[*start] + k;
     }
-    for (int i = *start + 1; i < len; i++) {
+    for (size_t i = *start + 1; i < len; i++) {
         if (data[i] == ' ') { // eсли смена хода, выходим из цикла
             *start = i;
             break;
@@ -202,14 +228,14 @@ int pawn_move(int round, int* pawn_turn, char type_turn, char board[][8])
 void input_data(Parsing* turn)
 {
     char i = getchar();
-    int len = 1;
+    size_t len = 1;
     turn->data[0] = i;
     while (i != '\n') {
         i = getchar();
         turn->data[len] = i;
         len++;
     }
-    int count = 0;
+    size_t count = 0;
     turn->round++;
     parse_turn(
             turn->round,
