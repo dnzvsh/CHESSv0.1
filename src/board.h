@@ -1,6 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <stdio.h>
+
 typedef struct {
     char data[30]; //необработанные входные данные
     int white_turn[4];
@@ -43,4 +45,6 @@ int turn_figure(
 int king_move(int* king_turn, char turn_type, char board[][8]);
 
 void parse_round(Parsing* turn, char* data);
+
+int read_file(FILE* file, Parsing* turn);
 #endif

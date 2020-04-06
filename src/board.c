@@ -34,31 +34,6 @@ void initialize_board(char board[][8])
     }
 }
 
-void parse_round(Parsing* turn, char* data)
-{
-    int start = 2;
-    size_t len = strlen(data);
-    turn->round++;
-    parse_turn(
-            turn->round,
-            turn->data,
-            &turn->type_turn_white,
-            &turn->white_figure,
-            &start,
-            turn->white_turn,
-            len);
-    start++;
-    turn->round++;
-    parse_turn(
-            turn->round,
-            turn->data,
-            &turn->type_turn_black,
-            &turn->black_figure,
-            &start,
-            turn->black_turn,
-            len);
-}
-
 static int is_lower_or_upper(char a)
 {
     if (a >= 'A' && a <= 'Z') {
@@ -69,24 +44,6 @@ static int is_lower_or_upper(char a)
     }
     return -1;
 }
-
-/*static void
-initialize_color(Parsing* turn, char* type_turn, int* turn_figure, char* figure)
-{
-    if (turn->round % 2 == 1) {
-        *figure = turn->white_figure;
-        *type_turn = turn->type_turn_white;
-        for (int i = 0; i < 4; i++) {
-            turn_figure[i] = turn->white_turn[i];
-        }
-    } else {
-        *figure = turn->black_figure;
-        *type_turn = turn->type_turn_black;
-        for (int i = 0; i < 4; i++) {
-            turn_figure[i] = turn->black_turn[i];
-        }
-    }
-}*/
 
 static void parse_turn(
         int round,
@@ -129,6 +86,42 @@ static void parse_turn(
             count++;
         }
     }
+}
+
+void parse_round(Parsing* turn, char* data)
+{
+    turn->round = 0;
+    size_t start = 3;
+    size_t len = strlen(data);
+    turn->round++;
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_white,
+            &turn->white_figure,
+            &start,
+            turn->white_turn,
+            len);
+    start++;
+    turn->round++;
+    parse_turn(
+            turn->round,
+            turn->data,
+            &turn->type_turn_black,
+            &turn->black_figure,
+            &start,
+            turn->black_turn,
+            len);
+}
+
+int read_file(FILE* file, Parsing* turn)
+{
+    fgets(turn->data, 30, file);
+    if (!turn->data) {
+        return -16;
+    }
+    parse_round(turn, turn->data);
+    return 0;
 }
 
 static void swap(char* a, char* b)
@@ -424,6 +417,9 @@ const void parse_error_code(int error_code)
         break;
     case -15:
         printf("Нет такой фигуры!\n");
+        break;
+    case -16:
+        printf("Конец файла\n");
         break;
     }
 }
