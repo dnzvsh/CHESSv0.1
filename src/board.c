@@ -96,7 +96,7 @@ void parse_round(Parsing* turn, char* data)
     turn->round++;
     parse_turn(
             turn->round,
-            turn->data,
+            data,
             &turn->type_turn_white,
             &turn->white_figure,
             &start,
@@ -106,7 +106,7 @@ void parse_round(Parsing* turn, char* data)
     turn->round++;
     parse_turn(
             turn->round,
-            turn->data,
+            data,
             &turn->type_turn_black,
             &turn->black_figure,
             &start,
