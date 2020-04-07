@@ -425,3 +425,131 @@ CTEST(test_queen, queen_move_error)
     int expected = -17;
     ASSERT_EQUAL(expected, result);
 }
+// tests Knight
+//Правильный ход
+CTEST(test_knight, knight_turn_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    parse_round(turn, "1. Nb1-a3 e7-e5");
+    // when
+    int result = knight_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//ход по вертикали
+CTEST(test_knight, knight_turn_error_walking_vertically)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    parse_round(turn, "1. Nb1-b3 e7-e5");
+    // when
+    int result = knight_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -9;
+    ASSERT_EQUAL(expected, result);
+}
+//ход в бок
+CTEST(test_knight, knight_turn_error_walking_in_the_side)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[1][2] = 'N';
+    parse_round(turn, "1. Nb3-e3 e7-e5");
+    // when
+    int result = knight_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -9;
+    ASSERT_EQUAL(expected, result);
+}
+//ход по диагонали
+CTEST(test_knight, knight_turn_error_walking_diagonally)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[1][2] = 'N';
+    parse_round(turn, "1. Nb3-e6 e7-e5");
+    // when
+    int result = knight_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -9;
+    ASSERT_EQUAL(expected, result);
+}
+//правильная рубка
+CTEST(test_knight, knight_cut_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][2] = 'n';
+    parse_round(turn, "1. Nb1xa3 e7-e5");
+    // when
+    int result = knight_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+// tests King
+//правильный ход
+CTEST(test_king, king_turn_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = ' ';
+    parse_round(turn, "1. Ke1-e2 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//неправильный ход(больше,чем на 1 клетку)
+CTEST(test_king, king_error_bad_move)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = ' ';
+    parse_round(turn, "1. Ke1-e3 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -14;
+    ASSERT_EQUAL(expected, result);
+}
+//правильная рубка
+CTEST(test_king, king_cut_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = 'n';
+    parse_round(turn, "1. Ke1xe2 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
