@@ -187,18 +187,18 @@ int turn_validation(
 int pawn_move(int round, int* pawn_turn, char type_turn, char board[][8])
 {
     int k = 1;
-    if (type_turn == '-') {
-        int max_turn = 1;
-        if (round % 2 == 1) {
-            if (pawn_turn[1] == 1) {
-                max_turn++;
-            }
-        } else {
-            k = -1;
-            if (pawn_turn[1] == 6) {
-                max_turn++;
-            }
+    int max_turn = 1;
+    if (round % 2 == 1) {
+        if (pawn_turn[1] == 1) {
+            max_turn++;
         }
+    } else {
+        k = -1;
+        if (pawn_turn[1] == 6) {
+            max_turn++;
+        }
+    }
+    if (type_turn == '-') {
         if (pawn_turn[0] != pawn_turn[2]) {
             return -4;
         }
