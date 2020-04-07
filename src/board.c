@@ -162,7 +162,7 @@ int turn_validation(
         char board[][8])
 {
     for (int i = 0; i < 4; i++) {
-        if (check_turn[i] > 8) {
+        if (check_turn[i] >= 8) {
             return -1;
         }
     }
@@ -349,7 +349,12 @@ int queen_move(int* queen_turn, char type_turn, char board[][8])
     if (queen_turn[0] == queen_turn[2] || queen_turn[1] == queen_turn[3]) {
         return rook_move(queen_turn, type_turn, board);
     } else {
-        return bishop_move(queen_turn, type_turn, board);
+        if (abs(queen_turn[0] - queen_turn[2])
+            == abs(queen_turn[1] - queen_turn[3])) {
+            return bishop_move(queen_turn, type_turn, board);
+        } else {
+            return -17;
+        }
     }
 }
 
@@ -420,6 +425,9 @@ const void parse_error_code(int error_code)
         break;
     case -16:
         printf("Конец файла\n");
+        break;
+    case -17:
+        printf("Некорректный ход королевы\n");
         break;
     }
 }
