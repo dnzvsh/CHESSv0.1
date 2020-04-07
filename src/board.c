@@ -52,6 +52,7 @@ static void parse_turn(
         char* figure,
         size_t* start,
         int* turn_figure,
+        char* status,
         size_t len)
 {
     int count = 0;
@@ -85,13 +86,24 @@ static void parse_turn(
             turn_figure[count] = data[i] - '1';
             count++;
         }
+        if (data[i + 1] == '+') {
+            *status = '+';
+        }
+        if (data[i + 1] == '#') {
+            *status = '#';
+        }
     }
 }
 
 void parse_round(Parsing* turn, char* data)
 {
     turn->round = 0;
-    size_t start = 3;
+    turn->status_white = ' ';
+    turn->status_black = ' ';
+    size_t start = 1;
+    while (data[start - 1] != ' ') {
+        start++;
+    }
     size_t len = strlen(data);
     turn->round++;
     parse_turn(
@@ -101,6 +113,7 @@ void parse_round(Parsing* turn, char* data)
             &turn->white_figure,
             &start,
             turn->white_turn,
+            &turn->status_white,
             len);
     start++;
     turn->round++;
@@ -111,6 +124,7 @@ void parse_round(Parsing* turn, char* data)
             &turn->black_figure,
             &start,
             turn->black_turn,
+            &turn->status_black,
             len);
 }
 
@@ -223,6 +237,8 @@ int pawn_move(int round, int* pawn_turn, char type_turn, char board[][8])
 
 void input_data(Parsing* turn)
 {
+    turn->status_white = ' ';
+    turn->status_black = ' ';
     char i = getchar();
     size_t len = 1;
     turn->data[0] = i;
@@ -240,6 +256,7 @@ void input_data(Parsing* turn)
             &turn->white_figure,
             &count,
             turn->white_turn,
+            &turn->status_white,
             len);
     count++;
     turn->round++;
@@ -250,6 +267,7 @@ void input_data(Parsing* turn)
             &turn->black_figure,
             &count,
             turn->black_turn,
+            &turn->status_black,
             len);
 }
 
@@ -439,6 +457,7 @@ const void parse_error_code(int error_code)
 }
 
 int turn_figure(
+        char status,
         int* round,
         int* figure_turn,
         char figure,
@@ -448,7 +467,7 @@ int turn_figure(
     int uncorrect;
     *round += 1;
     uncorrect = turn_validation(*round, figure_turn, figure, type_turn, board);
-    if (uncorrect) {
+    if (uncorrect && status != '#') {
         parse_error_code(uncorrect);
         return -1;
     }
@@ -480,7 +499,7 @@ int turn_figure(
     default:
         uncorrect = -15;
     }
-    if (uncorrect) {
+    if (uncorrect && status != '#') {
         parse_error_code(uncorrect);
         return -1;
     }

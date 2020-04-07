@@ -22,21 +22,41 @@ int main(int argv, char* argc[])
         while (!feof(file)) {
             int uncorrect = read_file(file, turn);
             uncorrect = turn_figure(
+                    turn->status_white,
                     &turn->round,
                     turn->white_turn,
                     turn->white_figure,
                     turn->type_turn_white,
                     board);
+            if (turn->status_white == '+') {
+                printf("Шах!\n");
+                turn->status_white = ' ';
+            }
+            if (turn->status_white == '#') {
+                printf("Мат!\n");
+                print_board(board);
+                return 0;
+            }
             print_board(board);
             if (uncorrect) {
                 return 0;
             }
             uncorrect = turn_figure(
+                    turn->status_black,
                     &turn->round,
                     turn->black_turn,
                     turn->black_figure,
                     turn->type_turn_black,
                     board);
+            if (turn->status_black == '+') {
+                printf("Шах!\n");
+                turn->status_black = ' ';
+            }
+            if (turn->status_black == '#') {
+                printf("Мат!\n");
+                print_board(board);
+                return 0;
+            }
             print_board(board);
             if (uncorrect) {
                 return 0;
@@ -47,21 +67,41 @@ int main(int argv, char* argc[])
         for (int j = 0; j < max_turn; j++) {
             input_data(turn);
             uncorrect = turn_figure(
+                    turn->status_white,
                     &turn->round,
                     turn->white_turn,
                     turn->white_figure,
                     turn->type_turn_white,
                     board);
+            if (turn->status_white == '+') {
+                printf("Шах!\n");
+                turn->status_white = ' ';
+            }
+            if (turn->status_white == '#') {
+                printf("Мат!\n");
+                print_board(board);
+                return 0;
+            }
             print_board(board);
             if (uncorrect) {
                 return 0;
             }
             uncorrect = turn_figure(
+                    turn->status_black,
                     &turn->round,
                     turn->black_turn,
                     turn->black_figure,
                     turn->type_turn_black,
                     board);
+            if (turn->status_black == '+') {
+                printf("Шах!\n");
+                turn->status_black = ' ';
+            }
+            if (turn->status_black == '#') {
+                printf("Мат!\n");
+                print_board(board);
+                return 0;
+            }
             print_board(board);
             if (uncorrect) {
                 return 0;

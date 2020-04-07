@@ -12,6 +12,8 @@ typedef struct {
     char type_turn_white;
     char type_turn_black;
     int round;
+    char status_white;
+    char status_black;
 } Parsing;
 
 int knight_move(int* knight_turn, char turn_type, char board[][8]);
@@ -36,6 +38,7 @@ int bishop_move(int* bishop_turn, char turn_type, char board[][8]);
 int queen_move(int* queen_turn, char type_turn, char board[][8]);
 
 int turn_figure(
+        char status,
         int* round,
         int* figure_turn,
         char figure,
