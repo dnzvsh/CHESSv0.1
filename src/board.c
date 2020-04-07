@@ -410,7 +410,7 @@ const void parse_error_code(int error_code)
         printf("Ходьба слона по прямой!\n");
         break;
     case -13:
-        printf("Хотьба не по диагонали!\n");
+        printf("Ходьба не по диагонали!\n");
         break;
     case -14:
         printf("Некорректный ход короля!\n");
