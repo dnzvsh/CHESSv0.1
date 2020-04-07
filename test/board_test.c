@@ -3,6 +3,48 @@
 #include "ctest.h"
 
 // tests validation
+//некорректный знак хода
+CTEST(test_validations, uncorrect_type_turn_error)
+{
+    // given
+    char board[8][8];
+    initialize_board(board);
+    Parsing a;
+    Parsing* turn = &a;
+    board[5][2] = 'N';
+    parse_round(turn, "1. e2:f3 e7-e5");
+    // when
+    int result = turn_validation(
+            turn->round + 1,
+            turn->white_turn,
+            turn->white_figure,
+            turn->type_turn_white,
+            board);
+    // then
+    int expected = -18;
+    ASSERT_EQUAL(expected, result);
+}
+//корректный знак хода
+CTEST(test_validations, correct_type_turn)
+{
+    // given
+    char board[8][8];
+    initialize_board(board);
+    Parsing a;
+    Parsing* turn = &a;
+    parse_round(turn, "1. e2-e3 e7-e5");
+    // when
+    int result = turn_validation(
+            turn->round + 1,
+            turn->white_turn,
+            turn->white_figure,
+            turn->type_turn_white,
+            board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+
 //плохая рубка (белые рубят белых)
 CTEST(test_validations, cut_desertion_error)
 {

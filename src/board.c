@@ -22,8 +22,8 @@ void initialize_board(char board[][8])
     board[0][0] = 'R';
     board[0][1] = 'N';
     board[0][2] = 'B';
-    board[0][3] = 'K';
-    board[0][4] = 'Q';
+    board[0][3] = 'Q';
+    board[0][4] = 'K';
     board[0][5] = 'B';
     board[0][6] = 'N';
     board[0][7] = 'R';
@@ -180,6 +180,9 @@ int turn_validation(
         if (board[check_turn[3]][check_turn[2]] != ' ') {
             return -3;
         }
+    }
+    if (type_turn != '-' && type_turn != 'x') {
+        return -18;
     }
     return 0;
 }
@@ -428,6 +431,9 @@ const void parse_error_code(int error_code)
         break;
     case -17:
         printf("Некорректный ход королевы\n");
+        break;
+    case -18:
+        printf("Некорректный тип хода!\n");
         break;
     }
 }
