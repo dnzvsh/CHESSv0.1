@@ -21,7 +21,7 @@ CTEST(test_pawns, pawn_turn_ok)
     ASSERT_EQUAL(expected, result);
 }
 //ходьба на 3 клетки
-CTEST(test_pawns, pawn_turn_error1)
+CTEST(test_pawns, pawn_turn_error_move_to_3_cells)
 {
     // given
     Parsing a;
@@ -37,7 +37,7 @@ CTEST(test_pawns, pawn_turn_error1)
     ASSERT_EQUAL(expected, result);
 }
 //ходьба в бок
-CTEST(test_pawns, pawn_turn_error03)
+CTEST(test_pawns, pawn_turn_error_walking_in_the_side)
 {
     Parsing a;
     Parsing* turn = &a;
@@ -53,7 +53,7 @@ CTEST(test_pawns, pawn_turn_error03)
     ASSERT_EQUAL(expected, result);
 }
 //ход по диагонали
-CTEST(test_pawns, pawn_turn_error04)
+CTEST(test_pawns, pawn_turn_error_walking_diagonally)
 {
     // given
     Parsing a;
@@ -69,7 +69,7 @@ CTEST(test_pawns, pawn_turn_error04)
     ASSERT_EQUAL(expected, result);
 }
 //ход пешки перед которой стоит фигура
-CTEST(test_pawns, pawn_turn_error05)
+CTEST(test_pawns, pawn_turn_error_walking_in_front_of_a_figure)
 {
     // given
     Parsing a;
@@ -86,7 +86,7 @@ CTEST(test_pawns, pawn_turn_error05)
     ASSERT_EQUAL(expected, result);
 }
 //ход назад
-CTEST(test_pawns, pawn_turn_error06)
+CTEST(test_pawns, pawn_turn_error_move_back)
 {
     // given
     Parsing a;
@@ -121,7 +121,7 @@ CTEST(test_pawns, pawn_cut_ok)
     ASSERT_EQUAL(expected, result);
 }
 //плохая рубка (белые рубят белых)
-CTEST(test_pawns, pawn_cut_error01)
+CTEST(test_pawns, pawn_cut_error_desertion)
 {
     // given
     char board[8][8];
@@ -142,7 +142,7 @@ CTEST(test_pawns, pawn_cut_error01)
     ASSERT_EQUAL(expected, result);
 }
 //рубка на место,где нет фигуры
-CTEST(test_pawns, pawn_cut_error02)
+CTEST(test_pawns, pawn_cut_error_cut_down_voids)
 {
     // given
     char board[8][8];
@@ -163,7 +163,7 @@ CTEST(test_pawns, pawn_cut_error02)
     ASSERT_EQUAL(expected, result);
 }
 //рубка фигуры назад
-CTEST(test_pawns, pawn_cut_error03)
+CTEST(test_pawns, pawn_cut_error_cutting_back)
 {
     // given
     char board[8][8];
