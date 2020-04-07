@@ -380,4 +380,52 @@ CTEST(test_knight, knight_cut_ok)
     int expected = 0;
     ASSERT_EQUAL(expected, result);
 }
-
+// tests King
+//правильный ход
+CTEST(test_king, king_turn_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = ' ';
+    parse_round(turn, "1. Ke1-e2 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//неправильный ход(больше,чем на 1 клетку)
+CTEST(test_king, king_error_bad_move)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = ' ';
+    parse_round(turn, "1. Ke1-e3 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -14;
+    ASSERT_EQUAL(expected, result);
+}
+//правильная рубка
+CTEST(test_king, king_cut_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[4][2] = 'n';
+    parse_round(turn, "1. Ke1xe2 e7-e5");
+    // when
+    int result = king_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
