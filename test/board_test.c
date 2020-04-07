@@ -142,7 +142,7 @@ CTEST(test_pawns, pawn_cut_error_desertion)
     ASSERT_EQUAL(expected, result);
 }
 //рубка на место,где нет фигуры
-CTEST(test_pawns, pawn_cut_error_cut_down_voids)
+CTEST(test_pawns, pawn_cut_error_down_voids)
 {
     // given
     char board[8][8];
@@ -177,5 +177,127 @@ CTEST(test_pawns, pawn_cut_error_cutting_back)
     int result = pawn_move(round, turn, type_turn, board);
     // then
     int expected = -5;
+    ASSERT_EQUAL(expected, result);
+}
+
+// tests rook
+//Ходьба по вертикали
+CTEST(test_rooks, rook_walking_vertically)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][1] = 'R';
+    parse_round(turn, "1. Ra2-a5 e7-e5");
+    // when
+    int result = rook_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//Ходьба в бок
+CTEST(test_rooks, rook_walking_in_the_side)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][2] = 'R';
+    parse_round(turn, "1. Ra3-e3 e7-e5");
+    // when
+    int result = rook_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//Ходьба если перед ладьей фигура
+CTEST(test_rooks, rook_error_walking_in_front_of_a_figure)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    parse_round(turn, "1. Ra1-a5 e7-e5");
+    // when
+    int result = rook_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -11;
+    ASSERT_EQUAL(expected, result);
+}
+//Ходьба ладьи по диагонали
+CTEST(test_rooks, rook_error_walking_diagonally)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][2] = 'R';
+    parse_round(turn, "1. Ra3-e6 e7-e5");
+    // when
+    int result = rook_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = -10;
+    ASSERT_EQUAL(expected, result);
+}
+//Правильная рубка
+CTEST(test_rooks, rook_cut_ok)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][2] = 'R';
+    parse_round(turn, "1. Ra3xa7 e7-e5");
+    // when
+    int result = rook_move(turn->white_turn, turn->type_turn_white, board);
+    // then
+    int expected = 0;
+    ASSERT_EQUAL(expected, result);
+}
+//рубка своих
+CTEST(test_rooks, rook_cut_error_desertion)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    parse_round(turn, "1. Ra1xa2 e7-e5");
+    // when
+    int result = turn_validation(
+            turn->round + 1,
+            turn->white_turn,
+            turn->white_figure,
+            turn->type_turn_white,
+            board);
+    // then
+    int expected = -3;
+    ASSERT_EQUAL(expected, result);
+}
+//рубка там, где пустое место
+CTEST(test_rooks, rook_cut_error_down_voids)
+{
+    // given
+    Parsing a;
+    Parsing* turn = &a;
+    char board[8][8];
+    initialize_board(board);
+    board[0][1] = ' ';
+    parse_round(turn, "1. Ra1xa2 e7-e5");
+    // when
+    int result = turn_validation(
+            turn->round + 1,
+            turn->white_turn,
+            turn->white_figure,
+            turn->type_turn_white,
+            board);
+    // then
+    int expected = -3;
     ASSERT_EQUAL(expected, result);
 }
