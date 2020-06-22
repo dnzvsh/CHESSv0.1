@@ -395,7 +395,7 @@ int king_move(int* king_turn, char turn_type, char board[][8])
     return 0;
 }
 
-const void parse_error_code(int error_code)
+void parse_error_code(int error_code)
 {
     switch (error_code) {
     case -1:

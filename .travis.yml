@@ -5,6 +5,5 @@ compiler: gcc
 dist: xenial
 
 script: 
-  - сmake
+  - make && make testRun
   - git ls-files src/ | xargs clang-format -i && git diff --exit-code
-
